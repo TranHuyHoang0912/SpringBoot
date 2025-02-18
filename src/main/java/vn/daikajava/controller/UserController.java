@@ -1,5 +1,7 @@
 package vn.daikajava.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.web.bind.annotation.*;
 import vn.daikajava.dto.request.UserRequestDTO;
 
@@ -11,7 +13,7 @@ public class UserController {
 
 //    @PostMapping(value = "/", headers = "apiKey=v1.0")
     @RequestMapping( method = RequestMethod.POST, path = "/", headers = "apiKey=v1.0")
-    public String addUser(@RequestBody UserRequestDTO userDTO){
+    public String addUser(@Valid @RequestBody UserRequestDTO userDTO){
         return "User added";
     }
     @PutMapping("/{userId}")
@@ -25,7 +27,7 @@ public class UserController {
         return "User changed status";
     }
     @DeleteMapping("/{userId}")
-        public String deleteUser(@PathVariable int userId){
+        public String deleteUser(@PathVariable @Min(1) int userId){
             System.out.println("Request to delete user " + userId);
             return "User deleted";
     }
