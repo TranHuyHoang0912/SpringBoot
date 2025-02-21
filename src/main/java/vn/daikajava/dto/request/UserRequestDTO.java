@@ -3,11 +3,13 @@ package vn.daikajava.dto.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
-import vn.daikajava.util.PhoneNumber;
+import vn.daikajava.util.*;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
+import static vn.daikajava.util.Gender.*;
 
 public class UserRequestDTO implements Serializable {
     @NotBlank(message = "firsrName must be not blank")
@@ -23,8 +25,16 @@ public class UserRequestDTO implements Serializable {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @JsonFormat(pattern = "MM/dd/yyyy")
     private Date dateOfBirth;
-    @NotEmpty(message = "permission is not empty")
-    private List<String> permission;
+//    @NotEmpty(message = "permission is not empty")
+//    private List<String> permission;
+    @EnumPattern(name = "status", regexp = "ACTIVE|INACTIVE|NONE" )
+    private UserStatus userStatus;
+//    @NotNull
+    @GenderSubset(anyOf = {MALE, FEMALE, OTHER})
+    private Gender gender;
+    @NotNull(message = "type must be not null")
+    @EnumValue(name = "type", enumClass = UserType.class)
+    private String type;
 
     public UserRequestDTO(String firstName, String lastName, String email, String phone) {
         this.firstName = firstName;
@@ -55,6 +65,18 @@ public class UserRequestDTO implements Serializable {
 
     public void setDateOfBirth(@NotNull(message = "dateOfBirth must be not null") Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public UserStatus getUserStatus() {
+        return userStatus;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public String getType(){
+        return type;
     }
 }
 
