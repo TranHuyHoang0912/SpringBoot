@@ -5,10 +5,11 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 public class ResponseSuccess extends ResponseEntity<ResponseSuccess.Payload> {
+    // mo ta du lieu tra ve cho put patch delete
     public ResponseSuccess(HttpStatusCode status, String message) {
         super(new Payload(status.value(), message), HttpStatus.OK);
     }
-
+    // GET, POST 
     public ResponseSuccess(HttpStatusCode status, String message, Object data) {
         super(new Payload(status.value(), message, data), HttpStatus.OK);
     }
