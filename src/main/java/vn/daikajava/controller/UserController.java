@@ -1,28 +1,34 @@
 package vn.daikajava.controller;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import jdk.jfr.ContentType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import vn.daikajava.dto.request.UserRequestDTO;
 import vn.daikajava.dto.response.ResponseData;
-import vn.daikajava.dto.response.ResponseSuccess;
+import vn.daikajava.dto.response.ResponseError;
+import vn.daikajava.service.UserService;
+import vn.daikajava.service.UserServiceImpl.UserServiceImpl;
 
 import java.util.List;
-
+@Validated
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+    @Autowired
+    private UserService userService;
     @PostMapping("/")
     public ResponseData<Integer> addUser(@Valid @RequestBody UserRequestDTO user){
-        System.out.println("Request add user " + user.getFirstName());
-        return new ResponseData<>(HttpStatus.CREATED.value(), "User added successfully", 1);
+        System.out.println("Request add user" + user.getFirstName());
+        try {
+            userService.addUser(user);
+            return new ResponseData<>(HttpStatus.CREATED.value(), "User added successfully", 1);
+        }
+        catch (Exception e){
+            return new ResponseError("Save failed",HttpStatus.BAD_REQUEST.value());
+        }
     }
     @PutMapping("/{userId}")
     public ResponseData<?> updateUser(@PathVariable int userId, @RequestBody UserRequestDTO userDTO){
