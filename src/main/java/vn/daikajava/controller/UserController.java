@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import vn.daikajava.configuration.Translator;
 import vn.daikajava.dto.request.UserRequestDTO;
 import vn.daikajava.dto.response.ResponseData;
 import vn.daikajava.dto.response.ResponseError;
@@ -22,23 +23,18 @@ public class UserController {
     @PostMapping("/")
     public ResponseData<Integer> addUser(@Valid @RequestBody UserRequestDTO user){
         System.out.println("Request add user" + user.getFirstName());
-        try {
-            userService.addUser(user);
-            return new ResponseData<>(HttpStatus.CREATED.value(), "User added successfully", 1);
-        }
-        catch (Exception e){
-            return new ResponseError("Save failed",HttpStatus.BAD_REQUEST.value());
-        }
-    }
+                    return new ResponseData<>(HttpStatus.CREATED.value(), Translator.toLocale("user.add.success"), 1);
+           }
     @PutMapping("/{userId}")
     public ResponseData<?> updateUser(@PathVariable int userId, @RequestBody UserRequestDTO userDTO){
         System.out.println("User updated" + userId);
-        return new ResponseData<>("User updated successfully", HttpStatus.ACCEPTED.value());
-    }
+        return new ResponseData<>(Translator.toLocale("user.update.success"), HttpStatus.ACCEPTED.value());
+        }
     @PatchMapping("/{userId}")
     public ResponseData<?> changeStatus(@PathVariable int userId, @RequestParam(required = false) boolean status){
         System.out.println("Request to change status of user " + userId);
         return new ResponseData<>("User status changed to " + status, HttpStatus.ACCEPTED.value());
+
     }
     @DeleteMapping("/{userId}")
     public ResponseData<?> deleteUser(@PathVariable @Min(1) int userId){
